@@ -51,6 +51,7 @@ def game_from(str)
   game
 end
 
+# a glider
 def setup_5
 board =<<-END
 001000
@@ -61,17 +62,101 @@ board =<<-END
 END
 end
 
+# a pulsar
+def setup_6
+board =<<-END
+  0011100011100
+  0000000000000
+  1000010100001
+  1000010100001
+  1000010100001
+  0011100011100
+  0000000000000
+  0011100011100
+  1000010100001
+  1000010100001
+  1000010100001
+  0000000000000
+  0011100011100
+END
+end
+
+# a pulsar
+def setup_7
+board =<<-END
+  0010000100
+  1101111011
+  0010000100
+END
+end
+
+# should be a glider (broken)
+def setup_8
+board =<<-END
+  0000001
+  0000010
+  0000100
+  0001000
+  0010000
+  0000000
+  1000000
+  1001000
+  1010000
+  0000000
+  0010000
+END
+end
+
+# acorn
+def setup_9
+board =<<-END
+  0100000
+  0001000
+  1100111
+END
+end
+
+# pulsar (toad)
+def setup_9
+board =<<-END
+  0111
+  1110
+END
+end
+
+# pulsar (beacon)
+def setup_10
+board =<<-END
+  1100
+  1100
+  0011
+  0011
+END
+end
+
+# glider gun
+def setup_glider_gun
+board =<<-END
+0000000000000000000000001000000000000000
+0000000000000000000000101000000000000000
+0000000000001100000011000000000000110000
+0000000000010001000011000000000000110000
+1100000000100000100011000000000000000000
+1100000000100010110000101000000000000000
+0000000000100000100000001000000000000000
+0000000000010001000000000000000000000000
+0000000000001100000000000000000000000000
+END
+end
+
 clear_code = %x(clear)
 
-#game = setup_1
-#game = setup_2
-#game = setup_3
-#game = setup_4
-game = game_from(setup_5)
+game = game_from(setup_glider_gun)
+game.dead_char = ' '
 
 prompt = false
 
-30.times do |i|
+60.times do |i|
   print clear_code
 #  puts
 
@@ -95,7 +180,7 @@ prompt = false
         binding.pry
     end
   else
-    sleep(1)
+    sleep(0.5)
   end
 
   game.tick

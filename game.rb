@@ -2,10 +2,13 @@ require_relative 'cell'
 
 class Game
   attr_accessor :cells
+  attr_accessor :dead_char, :live_char
   def initialize(rows = 3, cols = 3)
     @cells = []
     @nrows = rows
     @ncols = cols
+    @dead_char = '.'
+    @live_char = 'x'
   end
 
   def add_cells(*cells_to_add)
@@ -154,7 +157,6 @@ class Game
 
   def output_row(cell)
     while cell
-      #print cell.alive? ? 'x' : '.'
       print " %5d " % cell.id
       cell = cell.east
     end
@@ -162,7 +164,7 @@ class Game
 
   def output_row_state(cell)
     while cell
-      print cell.alive? ? 'x' : '.'
+      print cell.alive? ? live_char : dead_char
       cell = cell.east
     end
   end
