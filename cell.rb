@@ -2,6 +2,8 @@ class Cell
   attr_accessor :alive
   alias :alive? :alive
 
+  attr_accessor :changed
+
   NEIGHBORS = [:north, :south, :west, :east, :northwest, :northeast, :southwest, :southeast]
   attr_accessor *NEIGHBORS
   INVERSE = {
@@ -45,6 +47,7 @@ class Cell
   end
 
   def apply
+    @changed = (@alive == @newval)
     @alive = @newval
   end
 
