@@ -96,6 +96,35 @@ describe Cell do
 
   end
 
+  it 'can attach a cell' do
+    cell = Cell.new
+    new_cell = Cell.new
+    old_cell = Cell.new
+    cell.north = old_cell
+    old_cell.south = cell
+
+    cell.attach(new_cell, :north)
+
+    expect(cell.north).to be(new_cell)
+    expect(new_cell.south).to be(cell)
+    expect(old_cell.south).to be_nil
+
+  end
+
+  it 'can detach a cell' do 
+    cell = Cell.new
+    neighbor = Cell.new
+    cell.north = neighbor
+    neighbor.south = cell.north
+
+    cell.detach(:north)
+
+    expect(cell.north).to be_nil
+    expect(neighbor.south).to be_nil
+
+
+  end
+
   def create_cell_with_8_neighbors
     cell = Cell.new
     Cell::NEIGHBORS.each do |name|
