@@ -65,12 +65,16 @@ class Game
     new_edge = []
     prev_new_cell = nil
     prev_edge_cell = nil
+    next_edge_cell = nil
 
-    old_edge.each do |edge_cell|
+    old_edge.each_with_index do |edge_cell, i|
       new_cell = Cell.new
+      @cells << new_cell
       new_edge << new_cell
+      next_edge_cell = old_edge[i+1]
       new_cell.attach(edge_cell, opts[:edge_cell])
       new_cell.attach(prev_edge_cell, opts[:prev_edge_cell]) if prev_edge_cell
+      new_cell.attach(next_edge_cell, opts[:next_edge_cell]) if next_edge_cell
       new_cell.attach(prev_new_cell, opts[:prev_new_cell]) if prev_new_cell
       prev_new_cell = new_cell
       prev_edge_cell = edge_cell
@@ -91,6 +95,7 @@ class Game
     @north_edge = grow_edge(north_edge,
       edge_cell: :south,
       prev_edge_cell: :southwest,
+      next_edge_cell: :southeast,
       prev_new_cell: :west
     )
     @first_cell = @north_edge.first
@@ -105,6 +110,7 @@ class Game
     @west_edge = grow_edge(west_edge,
       edge_cell: :east,
       prev_edge_cell: :northeast,
+      next_edge_cell: :southeast,
       prev_new_cell: :north
     )
     @first_cell = @west_edge.first
@@ -119,6 +125,7 @@ class Game
     @east_edge = grow_edge(east_edge,
       edge_cell: :west,
       prev_edge_cell: :northwest,
+      next_edge_cell: :southwest,
       prev_new_cell: :north
     )
     reset_edges
@@ -132,6 +139,7 @@ class Game
     @south_edge = grow_edge(south_edge,
       edge_cell: :north,
       prev_edge_cell: :northwest,
+      next_edge_cell: :northeast,
       prev_new_cell: :west
     )
     reset_edges

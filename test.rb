@@ -69,9 +69,11 @@ clear_code = %x(clear)
 #game = setup_4
 game = game_from(setup_5)
 
-15.times do |i|
-#  print clear_code
-  puts
+prompt = false
+
+30.times do |i|
+  print clear_code
+#  puts
 
   game.pprint
   if game.nliving.zero?
@@ -83,6 +85,18 @@ game = game_from(setup_5)
     break
   end
   puts i
-  sleep(2)
+
+  if prompt
+    input = STDIN.gets.strip
+    case input
+      when "b"
+        break
+      when "p"
+        binding.pry
+    end
+  else
+    sleep(1)
+  end
+
   game.tick
 end

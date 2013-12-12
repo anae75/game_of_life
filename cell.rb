@@ -6,12 +6,17 @@ class Cell
     id
   end
 
+  @@all_cells = {}
+  def self.cell(id)
+    @@all_cells[id]
+  end
+
   attr_accessor :alive, :id
   alias :alive? :alive
 
   attr_accessor :changed
 
-  NEIGHBORS = [:north, :south, :west, :east, :northwest, :northeast, :southwest, :southeast]
+  NEIGHBORS = [:north, :northwest, :west, :southwest, :south, :southeast, :east, :northeast]
   attr_accessor *NEIGHBORS
   INVERSE = {
     :north => :south,
@@ -27,6 +32,7 @@ class Cell
   def initialize(is_alive = false)
     @id = Cell.next_id
     @alive = is_alive
+    @@all_cells[@id] = self
   end
 
   def live_neighbors
@@ -76,6 +82,13 @@ class Cell
     detach(direction)
     self.send("#{direction}=", cell)
     cell.attach(self, INVERSE[direction])
+  end
+
+  def pprint_neighbors
+    NEIGHBORS.each do |direction|
+      cell = self.send(direction)
+      puts "#{direction}: #{cell ? cell.id : ''}"
+    end
   end
 
   def to_s
