@@ -1,5 +1,12 @@
 class Cell
-  attr_accessor :alive
+  @@id = 0
+  def self.next_id
+    id = @@id
+    @@id += 1
+    id
+  end
+
+  attr_accessor :alive, :id
   alias :alive? :alive
 
   attr_accessor :changed
@@ -18,6 +25,7 @@ class Cell
   }
 
   def initialize(is_alive = false)
+    @id = Cell.next_id
     @alive = is_alive
   end
 
@@ -68,6 +76,10 @@ class Cell
     detach(direction)
     self.send("#{direction}=", cell)
     cell.attach(self, INVERSE[direction])
+  end
+
+  def to_s
+    "(cell #{@id})"
   end
 
 end
