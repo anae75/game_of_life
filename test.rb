@@ -70,7 +70,9 @@ clear_code = %x(clear)
 game = game_from(setup_5)
 
 15.times do |i|
-  print clear_code
+#  print clear_code
+  puts
+
   game.pprint
   if game.nliving.zero?
     puts "nothing left alive"

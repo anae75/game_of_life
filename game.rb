@@ -13,6 +13,7 @@ class Game
   end
 
   def tick
+    maybe_grow_field
     @cells.each { |cell| cell.decide }
     @cells.each { |cell| cell.apply }
   end
@@ -34,11 +35,21 @@ class Game
   end
 
   def pprint
-    @cells.each_with_index do |cell, i|
-      print cell.alive? ? 'x' : '.'
-      puts if (i+1) % @ncols == 0
+    row_start = @first_cell
+    while row_start
+      output_row_state(row_start)
+      puts
+      row_start = row_start.south
     end
-    puts
+  end
+
+  def pprint_indexes
+    row_start = @first_cell
+    while row_start
+      output_row(row_start)
+      puts
+      row_start = row_start.south
+    end
   end
 
   def get_edge(cell, direction)
@@ -50,43 +61,102 @@ class Game
     tmp
   end
 
+  def grow_edge(old_edge, opts)
+    new_edge = []
+    prev_new_cell = nil
+    prev_edge_cell = nil
+
+    old_edge.each do |edge_cell|
+      new_cell = Cell.new
+      new_edge << new_cell
+      new_cell.attach(edge_cell, opts[:edge_cell])
+      new_cell.attach(prev_edge_cell, opts[:prev_edge_cell]) if prev_edge_cell
+      new_cell.attach(prev_new_cell, opts[:prev_new_cell]) if prev_new_cell
+      prev_new_cell = new_cell
+      prev_edge_cell = edge_cell
+    end
+
+    new_edge
+  end
+
+  def reset_edges
+    @north_edge = @south_edge = @west_edge = @east_edge = nil
+  end
+
   def north_edge
     @north_edge ||= get_edge(@first_cell, :east)
+  end
+
+  def grow_north_edge
+    @north_edge = grow_edge(north_edge,
+      edge_cell: :south,
+      prev_edge_cell: :southwest,
+      prev_new_cell: :west
+    )
+    @first_cell = @north_edge.first
+    reset_edges
   end
 
   def west_edge
     @west_edge ||= get_edge(@first_cell, :south)
   end
 
+  def grow_west_edge
+    @west_edge = grow_edge(west_edge,
+      edge_cell: :east,
+      prev_edge_cell: :northeast,
+      prev_new_cell: :north
+    )
+    @first_cell = @west_edge.first
+    reset_edges
+  end
+
   def east_edge
     @east_edge ||= get_edge(north_edge.last, :south)
+  end
+
+  def grow_east_edge
+    @east_edge = grow_edge(east_edge,
+      edge_cell: :west,
+      prev_edge_cell: :northwest,
+      prev_new_cell: :north
+    )
+    reset_edges
   end
 
   def south_edge
     @south_edge ||= get_edge(west_edge.last, :east)
   end
 
-  def grow_north_edge
-    new_north_edge = []
-    if north_edge.any? { |cell| cell.alive? }
-      west_neighbor = nil
-      southwest_neighbor = nil
-      north_edge.each do |south_neighbor|
-        new_cell = Cell.new
-        new_north_edge << new_cell
-        new_cell.attach(south_neighbor, :south)
-        new_cell.attach(west_neighbor, :west) if west_neighbor
-        new_cell.attach(southwest_neighbor, :southwest) if southwest_neighbor
-        west_neighbor = new_cell
-        southwest_neighbor = south_neighbor
-      end
-    end
-    @north_edge = new_north_edge
-    @first_cell = new_north_edge.first
+  def grow_south_edge
+    @south_edge = grow_edge(south_edge,
+      edge_cell: :north,
+      prev_edge_cell: :northwest,
+      prev_new_cell: :west
+    )
+    reset_edges
   end
 
   def maybe_grow_field
-    grow_north_edge
+    grow_north_edge if north_edge.any? { |cell| cell.alive? }
+    grow_south_edge if south_edge.any? { |cell| cell.alive? }
+    grow_east_edge if east_edge.any? { |cell| cell.alive? }
+    grow_west_edge if west_edge.any? { |cell| cell.alive? }
+  end
+
+  def output_row(cell)
+    while cell
+      #print cell.alive? ? 'x' : '.'
+      print " %5d " % cell.id
+      cell = cell.east
+    end
+  end
+
+  def output_row_state(cell)
+    while cell
+      print cell.alive? ? 'x' : '.'
+      cell = cell.east
+    end
   end
 
   # TODO can only add if we are not playing yet, otherwise the indexes will get messed up
