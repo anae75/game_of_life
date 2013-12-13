@@ -108,7 +108,7 @@ END
 end
 
 # acorn
-def setup_9
+def setup_acorn
 board =<<-END
   0100000
   0001000
@@ -117,7 +117,7 @@ END
 end
 
 # pulsar (toad)
-def setup_9
+def setup_toad
 board =<<-END
   0111
   1110
@@ -125,12 +125,21 @@ END
 end
 
 # pulsar (beacon)
-def setup_10
+def setup_beacon
 board =<<-END
   1100
   1100
   0011
   0011
+END
+end
+
+def setup_diehard
+board =<<-END
+  00000000
+  00000010
+  11000000
+  01000111
 END
 end
 
@@ -151,18 +160,20 @@ end
 
 clear_code = %x(clear)
 
-game = game_from(setup_glider_gun)
+#game = game_from(setup_glider_gun)
+#game = game_from(setup_diehard)
+game = game_from(setup_acorn)
 game.dead_char = ' '
 
 prompt = false
 
-60.times do |i|
+5206.times do |i|
   print clear_code
 #  puts
 
   game.pprint
   if game.nliving.zero?
-    puts "nothing left alive"
+    puts "nothing left alive #{i}"
     break
   end
   if game.steady_state
@@ -180,7 +191,7 @@ prompt = false
         binding.pry
     end
   else
-    sleep(0.5)
+    sleep(0.05)
   end
 
   game.tick

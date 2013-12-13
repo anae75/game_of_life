@@ -9,6 +9,8 @@ class Game
     @ncols = cols
     @dead_char = '.'
     @live_char = 'x'
+@screenmax_cols = 60
+@screenmax_rows = 30
   end
 
   def add_cells(*cells_to_add)
@@ -149,6 +151,8 @@ class Game
   end
 
   def maybe_grow_field
+    return if north_edge.size > @screenmax_cols
+    return if west_edge.size > @screenmax_rows
     grow_north_edge if north_edge.any? { |cell| cell.alive? }
     grow_south_edge if south_edge.any? { |cell| cell.alive? }
     grow_east_edge if east_edge.any? { |cell| cell.alive? }
