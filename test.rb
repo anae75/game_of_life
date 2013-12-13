@@ -30,6 +30,10 @@ OptionParser.new do |opts|
     options[:char] = arg
   end
 
+  opts.on("-m", "--manual", "read board from stdin") do |arg|
+    options[:stdin] = true
+  end
+
 end.parse!
 
 @games = {}
@@ -466,4 +470,9 @@ if name = options[:game]
   play(name, options)
 end
 
+if options[:stdin]
+  str = STDIN.read
+  @games['stdin'] = str
+  play('stdin', options)
+end
 
