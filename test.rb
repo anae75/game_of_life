@@ -334,6 +334,28 @@ game 'shoot_rings_4' do
 END
 end
 
+game 'lay_bricks' do
+<<-END
+1.11.1
+....1.
+..1...
+.1.1..
+.11.1.
+......
+END
+end
+
+game 'mirror_cloud' do
+<<-END
+11....
+.1.1..
+..111.
+1.1.1.
+.11...
+.....1
+END
+end
+
 game 'four_ring_clover' do
 <<-END
 1..11.
