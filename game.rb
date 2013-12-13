@@ -9,8 +9,8 @@ class Game
     @ncols = cols
     @dead_char = '.'
     @live_char = 'x'
-@screenmax_cols = 60
-@screenmax_rows = 30
+@screenmax_cols = 90
+@screenmax_rows = 50
   end
 
   def add_cells(*cells_to_add)

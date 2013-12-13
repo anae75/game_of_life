@@ -136,11 +136,102 @@ board =<<-END
 END
 end
 
+game 'block_layer_1' do
+board =<<-END
+......1..
+....1.11.
+....1.1..
+....1....
+..1......
+1.1......
+END
+end
+
+game 'block_layer_2' do
+board =<<-END
+111.1
+1....
+...11
+.11.1
+1.1.1
+END
+end
+
 game 'bar' do
 <<-END
 1
 1
 1
+END
+end
+
+game 'cross' do
+<<-END
+.1.
+111
+.1.
+END
+end
+
+game '4_brick_layer' do
+<<-END
+1111.
+1111.
+..111
+..111
+..111
+END
+end
+
+game '4_brick_layer_2' do
+<<-END
+111.1
+.....
+1111.
+..11.
+1111.
+END
+end
+
+game 'circle_cross' do
+<<-END
+1..11
+1.1.1
+....1
+..1.1
+1.11.
+END
+end
+
+game 'sir_growsalot' do
+<<-END
+.....
+.1111
+11.11
+.1111
+11...
+END
+end
+
+game 'fires_a_spaceship' do
+<<-END
+11.1.1
+1.1..1
+1111.1
+....11
+.111.1
+111...
+END
+end
+
+game 'four_ring_clover' do
+<<-END
+1..11.
+11....
+1111.1
+..11.1
+1.111.
+.11...
 END
 end
 
@@ -155,6 +246,25 @@ def game_from(str)
     end
   end
   game
+end
+
+def randchar
+  rand(10) > 4 ? '1' : '.'
+end
+def random(rows = 6, cols = 6)
+  srand
+  str = ''
+  rows.times do
+    cols.times do
+      str << randchar
+    end
+    str << "\n"
+  end
+  str
+end
+
+game 'random' do
+  random
 end
 
 def play(name, options)
@@ -197,6 +307,10 @@ def play(name, options)
 
     game.tick
   end
+
+  if name == 'random'
+    puts @games['random']
+  end
 end
 
 if options[:list]
@@ -213,3 +327,5 @@ end
 if name = options[:game]
   play(name, options)
 end
+
+
